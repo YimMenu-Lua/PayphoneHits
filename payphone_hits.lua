@@ -114,4 +114,18 @@ payphone_hits_tab:add_imgui(function()
             gui.show_error("Payphone Hits", "Not available at the moment.")
         end
     end
+
+    if ImGui.Button("Instant Finish Payphone Hit") then
+        if payphone_state == PAYPHONE_STATE_ON_MISSION then
+            if script.is_active("fm_content_payphone_hit") then
+                script.execute_as_script("fm_content_payphone_hit", function()
+                    if NETWORK.NETWORK_IS_HOST_OF_THIS_SCRIPT() then
+                        locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 683, 3)
+                    end
+                end)
+            end
+        else
+            gui.show_error("Payphone Hits", "Request a hit first!")
+        end
+    end
 end)
