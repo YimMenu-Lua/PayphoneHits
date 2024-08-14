@@ -66,14 +66,14 @@ payphone_hits_tab:add_imgui(function()
     if used then
         selected_subvariation = 0
     end
-    
+
     selected_subvariation = ImGui.Combo("Select Subvariation", selected_subvariation, SUBVARIATION_NAMES[selected_variation], #SUBVARIATION_NAMES[selected_variation])
-    
+
     force_selected = ImGui.Checkbox("Force Selected", force_selected)
     ImGui.EndDisabled()
-    
+
     ImGui.Separator()
-    
+
     if ImGui.Button("Request Payphone Hit") then
         if payphone_state == PAYPHONE_STATE_WAIT then
             local value = globals.get_int(PAYPHONE_FLOW + 1 + 1) | (1 << 0)
@@ -106,12 +106,32 @@ payphone_hits_tab:add_imgui(function()
         end)
     end
 
+    if ImGui.IsItemHovered() then
+        ImGui.BeginTooltip()
+        ImGui.PushTextWrapPos(ImGui.GetFontSize() * 25)
+        ImGui.TextWrapped("WARNING!\10\10Disabling the cooldown and finishing multiple hits back to back may cause issues. Use at your own risk.")
+        ImGui.PopTextWrapPos()
+        ImGui.EndTooltip()
+    end
+
     if ImGui.Button("Complete Assassination Bonus") then
         if payphone_state == PAYPHONE_STATE_ON_MISSION then
             local value = locals.get_int("fm_content_payphone_hit", PAYPHONE_DATA + 740 + 1) | (1 << 1)
             locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 740 + 1, value)
         else
             gui.show_error("Payphone Hits", "Not available at the moment.")
+        end
+    end
+
+    if ImGui.Button("Instant Finish Payphone Hit") then
+        if payphone_state == PAYPHONE_STATE_ON_MISSION then
+            script.execute_as_script("fm_content_payphone_hit", function()
+                if NETWORK.NETWORK_IS_HOST_OF_THIS_SCRIPT() then
+                    locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 683, 3)
+                end
+            end)
+        else
+            gui.show_error("Payphone Hits", "Request a hit first!")
         end
     end
 end)
