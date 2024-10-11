@@ -1,7 +1,7 @@
 local payphone_hits_tab = gui.get_tab("Payphone Hits")
 
-local PAYPHONE_FLOW  = 2709088
-local FMMC_VARIATION = 2738934
+local PAYPHONE_FLOW  = 2709089
+local FMMC_VARIATION = 2738935
 local PAYPHONE_DATA  = 5675
 
 local GPBL = 0x679D39
@@ -73,7 +73,7 @@ script.register_looped("Payphone Hits", function()
     payphone_state = globals.get_int(PAYPHONE_FLOW)
     is_host        = NETWORK.NETWORK_GET_HOST_OF_SCRIPT("fm_content_payphone_hit", 0, 0)
     cooldown_str   = GET_COOLDOWN_STR()
-    
+
     if force_selected then
         globals.set_int(FMMC_VARIATION + 5249 + 347, selected_variation)
         locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 742 + 2, ASSASSINATION_BONUSES[selected_variation][selected_subvariation + 1])
@@ -95,7 +95,7 @@ payphone_hits_tab:add_imgui(function()
     ImGui.Separator()
 
     ImGui.Text(cooldown_str)
-    
+
     if ImGui.Button("Request Payphone Hit") then
         if payphone_state == PAYPHONE_STATE_WAIT then
             local value = globals.get_int(PAYPHONE_FLOW + 1 + 1) | (1 << 0)
@@ -104,12 +104,12 @@ payphone_hits_tab:add_imgui(function()
             gui.show_error("Payphone Hits", "Not available at the moment.")
         end
     end
-    
+
     if ImGui.IsItemHovered() then
         ImGui.SetTooltip("You won't get paid if you request a hit when cooldown is active.")
     end
 
-    if ImGui.Button("Teleport to Payphone Hit") then
+    if ImGui.Button("Teleport to Payphone") then
         script.run_in_fiber(function()
             if payphone_state == PAYPHONE_STATE_ACTIVE then
                 local coords = scr_function.call_script_function("freemode", GPBL, "vector3", {})
@@ -119,7 +119,7 @@ payphone_hits_tab:add_imgui(function()
             end
         end)
     end
-    
+
     if ImGui.Button("Instant Finish Payphone Hit") then
         if payphone_state == PAYPHONE_STATE_ON_MISSION then
             if is_host then
@@ -130,7 +130,7 @@ payphone_hits_tab:add_imgui(function()
         else
             gui.show_error("Payphone Hits", "Not available at the moment.")
         end
-    end    
+    end
 
     if ImGui.Button("Complete Assassination Bonus") then
         if payphone_state == PAYPHONE_STATE_ON_MISSION then
