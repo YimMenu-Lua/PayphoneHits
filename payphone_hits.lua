@@ -1,15 +1,15 @@
 local payphone_hits_tab = gui.get_tab("Payphone Hits")
 
-local PAYPHONE_FLOW  = 2709089
-local FMMC_VARIATION = 2738935
-local PAYPHONE_DATA  = 5675
+local PAYPHONE_FLOW  = 2709501
+local FMMC_VARIATION = 2739811
+local PAYPHONE_DATA  = 5778
 
-local GPBL = 0x679D39
+local GPBL = 0x69FAE2
 
 local PAYPHONE_STATE_WAIT       = 0
-local PAYPHONE_STATE_AVAILABLE  = 1
+--local PAYPHONE_STATE_AVAILABLE  = 1
 local PAYPHONE_STATE_ACTIVE     = 2
-local PAYPHONE_STATE_LAUNCHING  = 3
+--local PAYPHONE_STATE_LAUNCHING  = 3
 local PAYPHONE_STATE_ON_MISSION = 4
 
 local ASSASSINATION_BONUSES = {
@@ -75,8 +75,8 @@ script.register_looped("Payphone Hits", function()
     cooldown_str   = GET_COOLDOWN_STR()
 
     if force_selected then
-        globals.set_int(FMMC_VARIATION + 5249 + 347, selected_variation)
-        locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 742 + 2, ASSASSINATION_BONUSES[selected_variation][selected_subvariation + 1])
+        globals.set_int(FMMC_VARIATION + 5265 + 347, selected_variation)
+        locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 749 + 2, ASSASSINATION_BONUSES[selected_variation][selected_subvariation + 1])
     end
 end)
 
@@ -123,7 +123,7 @@ payphone_hits_tab:add_imgui(function()
     if ImGui.Button("Instant Finish Payphone Hit") then
         if payphone_state == PAYPHONE_STATE_ON_MISSION then
             if is_host then
-                locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 683, 3)
+                locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 689, 3)
             else
                 gui.show_error("Payphone Hits", "You must be the mission host.")
             end
@@ -135,8 +135,8 @@ payphone_hits_tab:add_imgui(function()
     if ImGui.Button("Complete Assassination Bonus") then
         if payphone_state == PAYPHONE_STATE_ON_MISSION then
             if is_host then
-                local value = locals.get_int("fm_content_payphone_hit", PAYPHONE_DATA + 740 + 1) | (1 << 1)
-                locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 740 + 1, value)
+                local value = locals.get_int("fm_content_payphone_hit", PAYPHONE_DATA + 747 + 1) | (1 << 1)
+                locals.set_int("fm_content_payphone_hit", PAYPHONE_DATA + 747 + 1, value)
             else
                 gui.show_error("Payphone Hits", "You must be the mission host.")
             end
